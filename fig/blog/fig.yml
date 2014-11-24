@@ -1,0 +1,31 @@
+data:
+  image: dockerfile/ubuntu
+
+  volumes:
+    - /var/lib/mysql
+
+db:
+  # fig run db mysql_install_db --datadir=/var/lib/mysql
+  image: satoshun/mysql
+
+  volumes_from:
+    - data
+
+web:
+  # fig run web mysql -h db 'create database blog;'
+  image: satoshun/ghost
+  links:
+    - db
+  ports:
+    - "2368:2368"
+
+nginx:
+  image: dockerfile/nginx
+  ports:
+    - '80:80'
+    - '443:443'
+  volumes:
+    - /home/vagrant/fig/flask/nginx/conf.d/:/etc/nginx/conf.d/:ro
+    - /home/vagrant/fig/flask/nginx/certs/:/etc/nginx/certs/:ro
+  links:
+    - web

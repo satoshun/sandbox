@@ -1,25 +1,31 @@
 package com.example.satouhayabusa.testandroid;
 
-import java.util.Locale;
-
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.view.Gravity;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.Locale;
 
 
 public class MainActivity extends ActionBarActivity {
+    private static final int PICK_IMAGE = 1;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -49,7 +55,6 @@ public class MainActivity extends ActionBarActivity {
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
     }
 
 
@@ -75,6 +80,40 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Bitmap bitmap = null;
+        byte[] byteArray = null;
+
+        if (resultCode == RESULT_OK) {
+            String action = data.getAction();
+
+            if (MediaStore.ACTION_IMAGE_CAPTURE.equals(action)) {
+                Bundle extras = data.getExtras();
+                bitmap = (Bitmap) extras.get("data");
+                byteArray = convertBitmap(bitmap);
+            } else if (Intent.ACTION_PICK.equals(action)) {
+                final Uri imageUri = data.getData();
+                final InputStream imageStream;
+                try {
+                    imageStream = getContentResolver().openInputStream(imageUri);
+                    bitmap = BitmapFactory.decodeStream(imageStream);
+                    byteArray = convertBitmap(bitmap);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if (byteArray != null && bitmap != null) {
+        }
+    }
+
+    private byte[] convertBitmap(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -114,6 +153,8 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+
+
     /**
      * A placeholder fragment containing a simple view.
      */
@@ -123,6 +164,8 @@ public class MainActivity extends ActionBarActivity {
          * fragment.
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
+
+        Button mPickButton;
 
         /**
          * Returns a new instance of this fragment for the given section
@@ -143,6 +186,21 @@ public class MainActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+            mPickButton = (Button) rootView.findViewById(R.id.pick_image);
+            mPickButton.setOnClickListener(new Button.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent takePhoto = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    Intent chooserIntent = Intent.createChooser(takePhoto, "photo");
+
+                    Intent pickGallery = new Intent(Intent.ACTION_PICK);
+                    pickGallery.setType("image/*");
+                    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{pickGallery});
+                    startActivityForResult(chooserIntent, PICK_IMAGE);
+                }
+            });
+
             return rootView;
         }
     }

@@ -7,6 +7,9 @@ db:
 redis:
   image: redis
 
+  volumes:
+    - /data/redis:/var/lib/redis
+
 web:
   build: .
   command: python app.py

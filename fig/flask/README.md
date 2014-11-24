@@ -1,6 +1,5 @@
 # fig: flask first
 
-ref: http://www.fig.sh/
 
 ## Install
 
@@ -26,4 +25,4 @@ $ sudo gem install fig2coreos
 
 ## reference
 
-[Fast, isolated development environments using Docker.](http://www.fig.sh/)
+- [Fast, isolated development environments using Docker.](http://www.fig.sh/)

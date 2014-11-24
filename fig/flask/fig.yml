@@ -1,0 +1,17 @@
+db:
+  image: mysql
+
+  volumes:
+    - /data/mysql:/var/lib/mysql
+
+redis:
+  image: redis
+
+web:
+  build: .
+  command: python app.py
+  links:
+    - db
+    - redis
+  ports:
+    - "8080:5000"

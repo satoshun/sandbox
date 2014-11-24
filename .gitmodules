@@ -1,0 +1,3 @@
+[submodule "vagrant/coreos-vagrant"]
+	path = vagrant/coreos-vagrant
+	url = git@github.com:coreos/coreos-vagrant.git

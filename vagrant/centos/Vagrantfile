@@ -1,0 +1,33 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+IP_ADDR = "192.168.33.30"
+
+SRC_DIR = "/Users/satouhayabusa/Dropbox/sandbox"
+DEST_DIR = "/home/vagrant/"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "centos6"
+  config.vm.box_url = "https://github.com/2creatives/vagrant-centos/releases/download/v6.5.3/centos65-x86_64-20140116.box"
+
+  config.ssh.username = "vagrant"
+  config.vm.network :private_network, ip: IP_ADDR
+  config.vm.hostname = "web"
+
+  config.vm.synced_folder SRC_DIR, DEST_DIR
+  config.vm.network :forwarded_port, guest: 8080, host: 80
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024
+  end
+
+  config.vm.provision "shell", path: "setup.sh"
+
+  #config.vm.provision "ansible" do |ansible|
+  #  ansible.playbook  = "setup/site.yml"
+  #  ansible.inventory_path  = "hosts"
+  #  ansible.limit = 'all'
+  #end
+end

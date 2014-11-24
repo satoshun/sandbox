@@ -23,3 +23,7 @@ $ fig up
 ```shell
 $ sudo gem install fig2coreos
 ```
+
+## reference
+
+[Fast, isolated development environments using Docker.](http://www.fig.sh/)

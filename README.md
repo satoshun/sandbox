@@ -1,11 +1,13 @@
 # My sandbox
 
+- [go](go)
+
 - fig
-  - flask
+  - [flask](fig/flask)
 
 - vagrant
-  - coreos
-  - centos
+  - [coreos](vagrant/coreos-vagrant)
+  - [centos](vagrant/centos)
 
 - android
-  - TestAndroid
+  - [TestAndroid](android/TestAndroid)

@@ -15,7 +15,7 @@ config = {
         database: {
             client: 'mysql',
             connection: {
-                host: 'aaaaa',
+                host: 'db',
                 user: 'root',
                 database: 'blog',
                 charset: 'utf8'

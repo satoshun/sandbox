@@ -4,6 +4,7 @@ data:
   volumes:
     - /var/lib/mysql
 
+
 db:
   image: satoshun/mysql
 
@@ -30,4 +31,4 @@ nginx:
     - /home/vagrant/fig/flask/nginx/conf.d/:/etc/nginx/conf.d/:ro
     - /home/vagrant/fig/flask/nginx/certs/:/etc/nginx/certs/:ro
   links:
-    - web
+    - blog
